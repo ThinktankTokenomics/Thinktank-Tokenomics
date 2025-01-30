@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thinktank Tokenomics</title>
+  <style>
+    /* General Styles */
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #0a0a0a;
+      color: #fff;
+      line-height: 1.6;
+    }
+
+    a {
+      color: #ff6f61;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    a:hover {
+      color: #ff3b2f;
+    }
+
+    /* Header */
+    header {
+      background: linear-gradient(135deg, #ff6f61, #ff3b2f);
+      padding: 60px 20px;
+      text-align: center;
+      color: #fff;
+    }
+
+    header h1 {
+      font-size: 3rem;
+      margin: 0;
+      animation: fadeIn 2s ease-in-out;
+    }
+
+    header p {
+      font-size: 1.2rem;
+      margin: 10px 0 0;
+      animation: fadeIn 3s ease-in-out;
+    }
+
+    /* Top Projects Section */
+    .top-projects {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 40px 20px;
+      background: #1a1a1a;
+    }
+
+    .project-card {
+      background: #2a2a2a;
+      margin: 20px;
+      padding: 25px;
+      width: 300px;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .project-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 8px 25px rgba(255, 111, 97, 0.5);
+    }
+
+    .project-card img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+
+    .project-card h3 {
+      margin: 15px 0 10px;
+      font-size: 1.5rem;
+      color: #ff6f61;
+    }
+
+    .project-card p {
+      margin: 0 0 15px;
+      font-size: 0.9rem;
+      color: #ccc;
+    }
+
+    .project-card a {
+      display: inline-block;
+      margin-right: 10px;
+      font-size: 0.9rem;
+    }
+
+    /* Search Section */
+    .search-container {
+      text-align: center;
+      margin: 40px 0;
+    }
+
+    #search {
+      padding: 10px 20px;
+      width: 300px;
+      border: 2px solid #ff6f61;
+      border-radius: 25px;
+      background: #1a1a1a;
+      color: #fff;
+      font-size: 1rem;
+    }
+
+    #search::placeholder {
+      color: #ccc;
+    }
+
+    /* Projects Table */
+    .projects-table {
+      width: 90%;
+      margin: 0 auto;
+      border-collapse: collapse;
+      background: #1a1a1a;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .projects-table th,
+    .projects-table td {
+      padding: 15px;
+      text-align: left;
+    }
+
+    .projects-table th {
+      background: #ff6f61;
+      color: #fff;
+      font-size: 1.1rem;
+    }
+
+    .projects-table tr:nth-child(even) {
+      background: #2a2a2a;
+    }
+
+    .projects-table tr:hover {
+      background: #333;
+    }
+
+    .project-logo {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    /* Footer */
+    footer {
+      background: #2a2a2a;
+      text-align: center;
+      padding: 20px;
+      margin-top: 40px;
+    }
+
+    footer p {
+      margin: 0;
+      font-size: 0.9rem;
+      color: #ccc;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header>
+    <h1>Thinktank Tokenomics</h1>
+    <p>Your hub for the best DeFi projects and developers.</p>
+  </header>
+
+  <!-- Top Projects Section -->
+  <section class="top-projects" id="top-projects">
+    <!-- Top projects will be populated here dynamically -->
+  </section>
+
+  <!-- Search Bar -->
+  <div class="search-container">
+    <input type="text" id="search" placeholder="Search for a project..." oninput="filterProjects()">
+  </div>
+
+  <!-- Projects Table -->
+  <table class="projects-table" id="projects-table">
+    <thead>
+      <tr>
+        <th>Logo</th>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Category</th>
+        <th>Links</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Other projects will be populated here dynamically -->
+    </tbody>
+  </table>
+
+  <!-- Footer -->
+  <footer>
+    <p>Join our Telegram group: <a href="https://t.me/+MF_0iKVT8BA1M2Fi" target="_blank">Thinktank Tokenomics</a></p>
+  </footer>
+
+  <script>
+    // Fetch Data from Published CSV
+    const csvUrl = 'https://github.com/ram5049/csv'; // Replace with your raw CSV URL
+
+    async function fetchData() {
+      try {
+        const response = await fetch(csvUrl);
+        const csvData = await response.text();
+        const rows = csvData.split('\n').slice(1); // Skip the header row
+        populateTopProjects(rows.slice(0, 6)); // Top 6 projects
+        populateTable(rows.slice(6)); // Rest of the projects
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    }
+
+    // Populate Top Projects
+    function populateTopProjects(rows) {
+      const topProjectsSection = document.getElementById('top-projects');
+      topProjectsSection.innerHTML = '';
+
+      rows.forEach(row => {
+        const [logo, name, description, category, website, twitter] = row.split(',');
+        const projectCard = document.createElement('div');
+        projectCard.classList.add('project-card');
+
+        projectCard.innerHTML = `
+          <img src="${logo}" alt="${name}" onerror="this.src='https://via.placeholder.com/300x150'">
+          <h3>${name}</h3>
+          <p>${description}</p>
+          <div>
+            <a href="${website}" target="_blank">Website</a>
+            <a href="${twitter}" target="_blank">Twitter</a>
+          </div>
+        `;
+
+        topProjectsSection.appendChild(projectCard);
+      });
+    }
+
+    // Populate Table with Data
+    function populateTable(rows) {
+      const tableBody = document.querySelector('#projects-table tbody');
+      tableBody.innerHTML = '';
+
+      rows.forEach(row => {
+        const [logo, name, description, category, website, twitter] = row.split(',');
+        const tableRow = document.createElement('tr');
+
+        tableRow.innerHTML = `
+          <td><img src="${logo}" alt="${name}" class="project-logo" onerror="this.src='https://via.placeholder.com/50'"></td>
+          <td>${name}</td>
+          <td>${description}</td>
+          <td>${category}</td>
+          <td>
+            <a href="${website}" target="_blank">Website</a> | 
+            <a href="${twitter}" target="_blank">Twitter</a>
+          </td>
+        `;
+
+        tableBody.appendChild(tableRow);
+      });
+    }
+
+    // Search Functionality
+    function filterProjects() {
+      const searchTerm = document.getElementById('search').value.toLowerCase();
+      const rows = document.querySelectorAll('#projects-table tbody tr');
+
+      rows.forEach(row => {
+        const name = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+        const description = row.querySelector('td:nth-child(3)').textContent.toLowerCase();
+        const category = row.querySelector('td:nth-child(4)').textContent.toLowerCase();
+
+        if (name.includes(searchTerm) || description.includes(searchTerm) || category.includes(searchTerm)) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    }
+
+    // Fetch data on page load
+    fetchData();
+  </script>
+</body>
+</html>
